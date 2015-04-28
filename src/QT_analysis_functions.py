@@ -30,6 +30,7 @@ def Y1_loglike(Y,G,Z,G_unique,Z_unique,beta,gamma,sigma_11,q_j,GZ_indicator):
     # information
     mu_i = np.dot(G,beta) + np.dot(Z,gamma)
     sum_n1 = (stats.norm.logpdf(Y[0:n1,0], mu_i, np.sqrt(sigma_11)) + np.log(np.dot(q_j,GZ_indicator))).sum()
+    # the second component involves samples with no genotype
     mu_j = np.dot(G_unique,beta) + np.dot(Z_unique,gamma)
     sum_pdf = [(stats.norm.pdf(Y[k,0],mu_j,np.sqrt(sigma_11))*q_j).sum() for k in range(n1,n)]
     sum_n2 = np.log(sum_pdf).sum()
@@ -118,7 +119,7 @@ def unique_pairs(G, Z):
     if(m == n1):
         ind_gz = np.identity(m)      
     else:
-        ind_gz = np.zeros((n1_test,len(unique_gz)))
+        ind_gz = np.zeros((n1,len(unique_gz)))
         for r in range(ind_gz.shape[0]):
             ind_gz[r,gz_value_frm_dict[r]] = 1 
     
